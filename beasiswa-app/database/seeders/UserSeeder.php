@@ -12,7 +12,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void 
 {
-    // 1. Buat User Admin
     \App\Models\User::create([
         'role_id' => 1, 
         'username' => 'admin_pusat',
@@ -20,7 +19,6 @@ class UserSeeder extends Seeder
         'password' => bcrypt('password'),
     ]);
 
-    // 2. Buat User Mahasiswa (Budi)
     $userMhs = \App\Models\User::create([
         'role_id' => 4, 
         'username' => 'mhs_budi',

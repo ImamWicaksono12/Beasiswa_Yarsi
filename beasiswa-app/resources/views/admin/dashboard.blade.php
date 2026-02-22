@@ -8,11 +8,22 @@
                     Beasiswa <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 not-italic">Yarsi</span>
                 </h1>
                 <p class="text-gray-400 mt-3 font-medium text-sm italic">Sistem Informasi Manajemen Beasiswa Terpadu</p>
+                
+                <div class="mt-6">
+                    <a href="{{ route('admin.beasiswa.index') }}" 
+                    class="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-gray-200 hover:bg-emerald-600 hover:-translate-y-1 transition-all group">
+                        <svg class="w-4 h-4 text-emerald-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Kelola & Tambah Beasiswa
+                    </a>
+                </div>
             </div>
+            
             <div class="flex items-center gap-3">
-                <div class="text-right hidden md:block">
+                <div class="text-right hidden md:block border-r-4 border-emerald-500 pr-4">
                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Status Server</p>
-                    <p class="text-sm font-bold text-emerald-600 italic">Online & Aktif</p>
+                    <p class="text-sm font-bold text-emerald-600 italic uppercase">Online & Aktif</p>
                 </div>
             </div>
         </div>
@@ -20,29 +31,33 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @php
                 $statCards = [
-                    ['label' => 'Total Mahasiswa', 'value' => $stats['total_mahasiswa'] ?? 0, 'color' => 'emerald'],
-                    ['label' => 'Jenis Beasiswa', 'value' => $stats['total_beasiswa'] ?? 0, 'color' => 'emerald'],
-                    ['label' => 'Total Pendaftar', 'value' => $stats['total_pengajuan'] ?? 0, 'color' => 'emerald'],
-                    ['label' => 'Pending Review', 'value' => $stats['pending_review'] ?? 0, 'color' => 'rose'],
+                    ['label' => 'Total Mahasiswa', 'value' => $stats['total_mahasiswa'] ?? 0, 'color' => 'emerald', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'],
+                    ['label' => 'Jenis Beasiswa', 'value' => $stats['total_beasiswa'] ?? 0, 'color' => 'emerald', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
+                    ['label' => 'Total Pendaftar', 'value' => $stats['total_pengajuan'] ?? 0, 'color' => 'emerald', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
+                    ['label' => 'Butuh Review', 'value' => $stats['pending_review'] ?? 0, 'color' => 'rose', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
                 ];
             @endphp
 
             @foreach($statCards as $card)
-            <div class="bg-white p-8 rounded-[2.5rem] border border-gray-50 shadow-[0_20px_50px_rgba(0,0,0,0.02)] group hover:-translate-y-1 transition-all duration-500">
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{{ $card['label'] }}</p>
-                <h3 class="text-5xl font-black {{ $card['color'] == 'rose' ? 'text-rose-500' : 'text-emerald-600' }} italic tracking-tighter transition-colors">
-                    {{ $card['value'] }}
-                </h3>
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="w-8 h-[2px] bg-gray-100 group-hover:bg-emerald-200 transition-colors"></span>
-                    <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest">Update Real-time</span>
+            <div class="bg-white p-8 rounded-[2.5rem] border border-gray-50 shadow-[0_20px_50px_rgba(0,0,0,0.02)] group hover:-translate-y-1 transition-all duration-500 relative overflow-hidden">
+                <div class="relative z-10">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{{ $card['label'] }}</p>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-5xl font-black {{ $card['color'] == 'rose' ? 'text-rose-500' : 'text-emerald-600' }} italic tracking-tighter">
+                            {{ $card['value'] }}
+                        </h3>
+                        <svg class="w-8 h-8 {{ $card['color'] == 'rose' ? 'text-rose-100' : 'text-emerald-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $card['icon'] }}"></path>
+                        </svg>
+                    </div>
                 </div>
             </div>
             @endforeach
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 bg-white p-10 rounded-[3.5rem] border border-gray-50 shadow-sm overflow-hidden relative">
+            
+            <div class="lg:col-span-2 bg-white p-10 rounded-[3.5rem] border border-gray-50 shadow-sm relative">
                 <div class="flex justify-between items-center mb-10">
                     <div>
                         <h3 class="font-black text-gray-800 uppercase italic tracking-widest text-sm">Visualisasi Data</h3>
@@ -54,21 +69,22 @@
                 </div>
             </div>
 
-            <div class="bg-gray-900 p-10 rounded-[3.5rem] text-white shadow-2xl shadow-emerald-100 flex flex-col overflow-hidden relative">
+            <div class="bg-gray-900 p-10 rounded-[3.5rem] text-white shadow-2xl flex flex-col overflow-hidden relative">
                 <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-emerald-500 rounded-full blur-[100px] opacity-20"></div>
                 
                 <h3 class="font-black uppercase italic tracking-widest text-sm mb-8 relative z-10">Antrean Terbaru</h3>
-                <div class="space-y-6 relative z-10 flex-1 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar">
+                
+                <div class="space-y-6 relative z-10 flex-1 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar text-white">
                     @forelse($recentApplications as $app)
                     <div class="flex items-center gap-4 group">
                         <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center font-black text-emerald-400 border border-white/5 transition-all group-hover:bg-emerald-600 group-hover:text-white">
-                            {{ substr($app->user->name ?? '?', 0, 1) }}
+                            {{ substr($app->mahasiswa->nama ?? '?', 0, 1) }}
                         </div>
                         <div class="flex-1">
-                            <p class="text-xs font-black uppercase italic tracking-tight">
-                                {{ Str::limit($app->user->name ?? 'User Tidak Ada', 20) }}
+                            <p class="text-xs font-black uppercase italic tracking-tight leading-tight">
+                                {{ Str::limit($app->mahasiswa->nama ?? 'Nama Tidak Tersedia', 22) }}
                             </p>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">
                                 {{ $app->beasiswa->nama ?? 'Program Beasiswa' }}
                             </p>
                         </div>
@@ -76,12 +92,13 @@
                     </div>
                     @empty
                     <div class="text-center py-20">
-                        <p class="text-gray-500 italic text-sm">Tidak ada data pendaftaran.</p>
+                        <p class="text-gray-500 italic text-sm font-medium">Tidak ada data pendaftaran.</p>
                     </div>
                     @endforelse
                 </div>
 
-                <a href="#" class="mt-8 w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all relative z-10 text-center shadow-xl shadow-emerald-900/40">
+                <a href="{{ route('admin.monev.index') }}" 
+                class="mt-8 w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all relative z-10 text-center shadow-xl shadow-emerald-900/40 block">
                     Buka Panel Monev
                 </a>
             </div>
@@ -93,8 +110,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('yarsiChart').getContext('2d');
-        
-        // Data dikirim secara dinamis dari AdminController@index
         const chartDataValues = {!! json_encode($chartData['data'] ?? [0,0,0]) !!};
 
         new Chart(ctx, {
@@ -112,14 +127,14 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '85%', // Membuat ring donut tipis dan modern
+                cutout: '85%',
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: {
                             padding: 30,
                             usePointStyle: true,
-                            font: { weight: 'bold', family: 'Inter', size: 12 }
+                            font: { weight: 'bold', family: 'Inter', size: 11 }
                         }
                     }
                 }

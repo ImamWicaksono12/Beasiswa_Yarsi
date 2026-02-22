@@ -4,21 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany; // Tambahkan ini
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pengajuan extends Model
 {
-    protected $table = 'pengajuan'; // Pastikan nama tabel sesuai database Anda
-    protected $fillable = ['user_id', 'beasiswa_id', 'status', 'keterangan'];
+    use HasFactory;
 
-    // Relasi ke User (Mahasiswa)
-    public function user(): BelongsTo
+    protected $table = 'pengajuan'; 
+
+    protected $fillable = [
+        'mhs_id', 
+        'beasiswa_id', 
+        'tanggal', 
+        'status', 
+        'keterangan'
+    ];
+
+    public function mahasiswa(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Mahasiswa::class, 'mhs_id');
     }
 
-    // Relasi ke Beasiswa
     public function beasiswa(): BelongsTo
     {
         return $this->belongsTo(Beasiswa::class, 'beasiswa_id');
+    }
+
+    public function dokUploads(): HasMany
+    {
+        return $this->hasMany(DokUpload::class, 'pengajuan_id');
     }
 }

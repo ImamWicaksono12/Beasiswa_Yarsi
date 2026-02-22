@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SyaratDok extends Model
 {
-    protected $table = 'syarat_dok'; // Pastikan sesuai nama tabel di migrasi
+    protected $table = 'syarat_dok'; 
     protected $fillable = ['beasiswa_id', 'nama_dokumen'];
 
     public function beasiswa()

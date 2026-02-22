@@ -16,6 +16,42 @@
                 <p class="text-indigo-100 opacity-90">Ada {{ $beasiswas->count() }} program beasiswa yang sedang membuka pendaftaran untuk Anda.</p>
             </div>
 
+            @if(isset($pengajuanTerbaru) && $pengajuanTerbaru)
+            <div class="mb-10 p-1 border-transparent rounded-[2rem] bg-gradient-to-r 
+                {{ $pengajuanTerbaru->status == 'Diterima' ? 'from-emerald-400 to-teal-500 shadow-emerald-100' : 
+                ($pengajuanTerbaru->status == 'Ditolak' ? 'from-rose-400 to-orange-500 shadow-rose-100' : 'from-amber-400 to-yellow-500 shadow-amber-100') }} 
+                shadow-2xl">
+                <div class="bg-white rounded-[1.9rem] p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg
+                            {{ $pengajuanTerbaru->status == 'Diterima' ? 'bg-emerald-500' : ($pengajuanTerbaru->status == 'Ditolak' ? 'bg-rose-500' : 'bg-amber-500 animate-pulse') }}">
+                            @if($pengajuanTerbaru->status == 'Diterima') 
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                            @elseif($pengajuanTerbaru->status == 'Ditolak') 
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                            @else 
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            @endif
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-black uppercase tracking-widest {{ $pengajuanTerbaru->status == 'Diterima' ? 'text-emerald-600' : ($pengajuanTerbaru->status == 'Ditolak' ? 'text-rose-600' : 'text-amber-600') }}">
+                                Update Status Pengajuan
+                            </h4>
+                            <p class="text-gray-800 font-bold italic uppercase">
+                                {{ $pengajuanTerbaru->beasiswa->nama }} : 
+                                <span class="not-italic font-black underline decoration-2 underline-offset-4">
+                                    {{ $pengajuanTerbaru->status }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <a href="{{ route('mahasiswa.riwayat') }}" class="px-6 py-3 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-gray-100">
+                        Cek Riwayat Lengkap
+                    </a>
+                </div>
+            </div>
+            @endif
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($beasiswas as $b)
                     <div class="group bg-white rounded-3xl shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col">
