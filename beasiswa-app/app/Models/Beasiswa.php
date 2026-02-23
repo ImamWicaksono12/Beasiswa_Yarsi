@@ -10,7 +10,7 @@ class Beasiswa extends Model
     use HasFactory;
 
     protected $table = 'beasiswa';
-    protected $fillable = ['nama', 'deskripsi', 'kuota', 'deadline'];
+    protected $fillable = ['nama', 'deskripsi', 'kuota', 'deadline','periode'];
     /**
      */
     public function syaratDok()
