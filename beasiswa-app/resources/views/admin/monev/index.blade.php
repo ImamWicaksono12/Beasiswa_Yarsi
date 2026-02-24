@@ -18,6 +18,7 @@
                     <tr class="bg-gray-900 text-white uppercase italic">
                         <th class="px-8 py-6 text-[10px] font-black tracking-widest">Mahasiswa</th>
                         <th class="px-8 py-6 text-[10px] font-black tracking-widest">Beasiswa</th>
+                        <th class="px-8 py-6 text-[10px] font-black tracking-widest">Berkas Dokumen</th>
                         <th class="px-8 py-6 text-[10px] font-black tracking-widest text-center">Status</th>
                         <th class="px-8 py-6 text-[10px] font-black tracking-widest text-right">Aksi Keputusan</th>
                     </tr>
@@ -30,12 +31,36 @@
                                 {{ $p->mahasiswa->nama ?? 'Nama Tidak Terdata' }}
                             </p>
                             <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
-                                {{ $p->mahasiswa->user->email ?? 'Email tidak ditemukan' }}
+                                NIM: {{ $p->mahasiswa->nim ?? '-' }}
                             </p>
                         </td>
+
                         <td class="px-8 py-6 text-xs font-bold text-gray-500 uppercase italic">
                             {{ $p->beasiswa->nama ?? 'Program Sudah Dihapus' }}
                         </td>
+                        
+                        <td class="px-8 py-6">
+                            <div class="flex flex-col gap-2">
+                                @forelse($p->dokUploads as $dok)
+                                    <a href="{{ asset('uploads/dokumen/' . $dok->nama_file) }}" 
+                                    target="_blank" 
+                                    class="flex items-center gap-2 group">
+                                        <div class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-[9px] font-black text-gray-600 uppercase italic tracking-tighter hover:text-indigo-600">
+                                            {{ $dok->syarat->nama_dokumen ?? 'Lihat Berkas' }}
+                                        </span>
+                                    </a>
+                                @empty
+                                    <span class="text-[9px] font-bold text-rose-400 uppercase italic">Belum ada berkas</span>
+                                @endforelse
+                            </div>
+                        </td>
+
                         <td class="px-8 py-6 text-center">
                             <span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic
                                 {{ $p->status == 'Diterima' ? 'bg-emerald-500 text-white' : 
@@ -43,17 +68,18 @@
                                 {{ $p->status }}
                             </span>
                         </td>
+
                         <td class="px-8 py-6">
                             <div class="flex justify-end gap-3">
-                                <form action="{{ route('admin.monev.update', $p->id) }}" method="POST">
-                                    @csrf @method('PATCH')
+                                <form action="{{ route('admin.updateStatus', $p->id) }}" method="POST">
+                                    @csrf
                                     <input type="hidden" name="status" value="Diterima">
                                     <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black rounded-2xl transition-all shadow-lg shadow-emerald-200 uppercase italic">
                                         Terima
                                     </button>
                                 </form>
-                                <form action="{{ route('admin.monev.update', $p->id) }}" method="POST">
-                                    @csrf @method('PATCH')
+                                <form action="{{ route('admin.updateStatus', $p->id) }}" method="POST">
+                                    @csrf
                                     <input type="hidden" name="status" value="Ditolak">
                                     <button type="submit" class="px-5 py-2.5 bg-white border-2 border-rose-500 text-rose-500 hover:bg-rose-50 text-[10px] font-black rounded-2xl transition-all uppercase italic">
                                         Tolak
@@ -63,6 +89,11 @@
                         </td>
                     </tr>
                     @empty
+                    <tr>
+                        <td colspan="5" class="px-8 py-12 text-center">
+                            <p class="text-xs font-black text-gray-400 uppercase italic tracking-widest">Belum ada pengajuan masuk</p>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>

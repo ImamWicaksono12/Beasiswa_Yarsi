@@ -55,18 +55,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/users', 'storeUser')->name('admin.users.store');
             Route::delete('/users/{id}', 'destroyUser')->name('admin.users.destroy');
             
-            // Manajemen Monitoring & Evaluasi (Monev)
+            // --- MANAJEMEN MONITORING (MONEV) ---
             Route::get('/monev', 'monevIndex')->name('admin.monev.index');
+            // Rute ini yang dipanggil di form Blade Admin (update status terima/tolak)
+            Route::post('/monev/update-status/{id}', 'updateStatus')->name('admin.updateStatus');
+            // Backup rute patch jika diperlukan
             Route::patch('/monev/{id}/update', 'updateStatus')->name('admin.monev.update');
 
-            // Manajemen Data Beasiswa (LENGKAP)
-            Route::get('/beasiswa', 'dataBeasiswa')->name('admin.beasiswa.index'); // Halaman Utama Beasiswa
-            Route::post('/beasiswa/store', 'storeBeasiswa')->name('admin.beasiswa.store'); // Simpan Beasiswa Baru
-            
-            // --- Route Tambahan Agar Tidak Error ---
-            Route::get('/beasiswa/{id}/edit', 'editBeasiswa')->name('admin.beasiswa.edit'); // Form Edit
-            Route::patch('/beasiswa/{id}/update', 'updateBeasiswa')->name('admin.beasiswa.update'); // Proses Update
-            Route::delete('/beasiswa/{id}', 'destroyBeasiswa')->name('admin.beasiswa.destroy'); // Proses Hapus
+            // --- MANAJEMEN DATA BEASISWA ---
+            Route::get('/beasiswa', 'dataBeasiswa')->name('admin.beasiswa.index'); 
+            Route::post('/beasiswa/store', 'storeBeasiswa')->name('admin.beasiswa.store'); 
+            Route::get('/beasiswa/{id}/edit', 'editBeasiswa')->name('admin.beasiswa.edit'); 
+            Route::patch('/beasiswa/{id}/update', 'updateBeasiswa')->name('admin.beasiswa.update'); 
+            Route::delete('/beasiswa/{id}', 'destroyBeasiswa')->name('admin.beasiswa.destroy'); 
         });
     });
 });

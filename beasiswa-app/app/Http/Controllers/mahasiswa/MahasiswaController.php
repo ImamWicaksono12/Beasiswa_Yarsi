@@ -10,12 +10,9 @@ use App\Models\DokUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class MahasiswaController extends Controller
 {
-    /**
-     */
     public function index()
     {
         $beasiswas = Beasiswa::all();
@@ -32,16 +29,12 @@ class MahasiswaController extends Controller
         return view('mahasiswa.dashboard', compact('beasiswas', 'pengajuanTerbaru'));
     }
 
-    /**
-     */
     public function profil()
     {
         $mahasiswa = Mahasiswa::where('user_id', Auth::id())->first();
         return view('mahasiswa.profil', compact('mahasiswa'));
     }
 
-    /**
-     */
     public function updateProfil(Request $request)
     {
         $request->validate([
@@ -61,8 +54,6 @@ class MahasiswaController extends Controller
         return redirect()->route('mahasiswa.dashboard')->with('success', 'Profil berhasil diperbarui!');
     }
 
-    /**
-     */
     public function detail($id)
     {
         $beasiswa = Beasiswa::with('syaratDok')->findOrFail($id);
@@ -70,7 +61,7 @@ class MahasiswaController extends Controller
         
         if (!$mahasiswa || empty($mahasiswa->nim)) {
             return redirect()->route('mahasiswa.profil')
-                ->with('error', 'Silakan lengkapi profil Anda terlebih dahulu sebelum melihat detail beasiswa.');
+                ->with('error', 'Silakan lengkapi profil Anda terlebih dahulu.');
         }
 
         $sudahDaftar = Pengajuan::where('mhs_id', $mahasiswa->id)
@@ -85,15 +76,15 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'beasiswa_id' => 'required|exists:beasiswas,id', 
+            'beasiswa_id' => 'required|exists:beasiswa,id', 
             'dokumen' => 'required|array', 
             'dokumen.*' => 'required|file|mimes:pdf,jpg,png|max:2048',
         ]);
 
         $mahasiswa = Mahasiswa::where('user_id', Auth::id())->first();
 
-        if (!$mahasiswa || empty($mahasiswa->nim)) {
-            return redirect()->route('mahasiswa.profil')->with('error', 'Profil mahasiswa belum lengkap.');
+        if (!$mahasiswa) {
+            return redirect()->back()->with('error', 'Data mahasiswa tidak ditemukan.');
         }
 
         $cekPendaftaran = Pengajuan::where('mhs_id', $mahasiswa->id)
@@ -101,7 +92,7 @@ class MahasiswaController extends Controller
                 ->exists();
 
         if ($cekPendaftaran) {
-            return redirect()->route('mahasiswa.riwayat')->with('error', 'Anda sudah mendaftar di program ini.');
+            return redirect()->route('mahasiswa.riwayat')->with('error', 'Anda sudah mendaftar.');
         }
 
         DB::beginTransaction();
@@ -115,35 +106,31 @@ class MahasiswaController extends Controller
 
             if ($request->hasFile('dokumen')) {
                 foreach ($request->file('dokumen') as $syaratId => $file) {
-                    $fileName = 'SCH_' . $pengajuan->id . '_' . $syaratId . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('dokumen_pendaftaran', $fileName, 'public');
+                    $fileName = 'DOC_' . time() . '_' . $syaratId . '.' . $file->getClientOriginalExtension();
+                    
+                    $file->move(public_path('uploads/dokumen'), $fileName);
 
                     DokUpload::create([
-                        'pengajuan_id' => $pengajuan->id,
+                        'pengajuan_id'  => $pengajuan->id,
                         'syarat_dok_id' => $syaratId,
-                        'file_path' => $path,
+                        'nama_file'     => $fileName, 
                     ]);
                 }
             }
 
             DB::commit();
-            return redirect()->route('mahasiswa.riwayat')->with('success', 'Pendaftaran Anda Berhasil Terkirim!');
+            return redirect()->route('mahasiswa.riwayat')->with('success', 'Pendaftaran Berhasil Terkirim!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal mendaftar: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal: ' . $e->getMessage());
         }
     }
 
-    /**
-     */
     public function riwayat()
     {
         $mahasiswa = Mahasiswa::where('user_id', Auth::id())->first();
-
-        if (!$mahasiswa) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Profil tidak ditemukan.');
-        }
+        if (!$mahasiswa) return redirect()->route('mahasiswa.dashboard');
 
         $pengajuans = Pengajuan::where('mhs_id', $mahasiswa->id)
             ->with(['beasiswa', 'dokUploads'])
