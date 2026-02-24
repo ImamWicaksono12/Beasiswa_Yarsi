@@ -14,7 +14,6 @@
                 </h1>
             </div>
         </div>
-
         <div class="bg-white rounded-[3.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.02)] border border-gray-100 overflow-hidden relative">
             <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
 
@@ -26,9 +25,8 @@
                     <div class="space-y-3">
                         <label class="block text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-2">Nama Program Beasiswa</label>
                         <input type="text" name="nama" value="{{ old('nama', $beasiswa->nama) }}" required 
-                            class="w-full border-none bg-gray-50 rounded-[1.5rem] focus:ring-2 focus:ring-emerald-500 font-bold text-gray-700 p-5 transition-all text-lg">
+                        class="w-full border-none bg-gray-50 rounded-[1.5rem] focus:ring-2 focus:ring-emerald-500 font-bold text-gray-700 p-5 transition-all text-lg">
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <label class="block text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-2">Kuota (Orang)</label>
@@ -41,7 +39,6 @@
                                 class="w-full border-none bg-gray-50 rounded-[1.5rem] focus:ring-2 focus:ring-emerald-500 font-bold text-gray-700 p-5 transition-all">
                         </div>
                     </div>
-
                     <div class="space-y-3">
                         <label class="block text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-2">Deskripsi & Cakupan</label>
                         <textarea name="deskripsi" rows="5" required
